@@ -34,7 +34,7 @@ To run this:
 
 littlecheck will parse out the special comments `# RUN` and `# CHECK`:
 
-- `# RUN` specifies an arbitary shell command. `%s` is substituted with the path to the input file. 
+- `# RUN` specifies an arbitary shell command. `%s` is substituted with the path to the input file.
 - `# CHECK` specifies an expected output line. littlecheck verifies that the output of the shell command matches the sequence of `CHECK` lines.
 
 If no `# RUN` command has been given, littlecheck will use a given shebang.
