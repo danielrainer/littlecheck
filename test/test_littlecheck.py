@@ -1,7 +1,6 @@
 import unittest
 import io
 import os.path
-import tempfile
 
 import littlecheck
 
