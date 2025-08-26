@@ -7,7 +7,7 @@ import littlecheck
 
 class LittlecheckTest(unittest.TestCase):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Switch to test/files directory."""
         test_dir = os.path.dirname(os.path.abspath(__file__))
         os.chdir(os.path.join(test_dir, "files"))
