@@ -107,4 +107,4 @@ class LittlecheckTest(unittest.TestCase):
             self.do_1_path_test("exe_not_found")
         except littlecheck.CheckerError:
             return
-        raise Error
+        raise Exception
