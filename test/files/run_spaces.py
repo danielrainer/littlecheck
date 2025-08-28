@@ -1,8 +1,6 @@
-#RUN: /usr/bin/python %s %arg
+# RUN: /usr/bin/python3 %s %arg
 
 import sys
 
 print(sys.argv[1:])
-#CHECK: ['arg with spaces']
-
-
+# CHECK: ['arg with spaces']

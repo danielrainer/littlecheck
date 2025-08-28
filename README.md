@@ -15,7 +15,7 @@ littlecheck is aimed at programs which process a text file and produce output on
 An example test for the Python interpreter:
 
 ```python
-# RUN: /usr/bin/python %s
+# RUN: /usr/bin/python3 %s
 
 print("abc") # CHECK: abc
 
@@ -34,7 +34,7 @@ To run this:
 
 littlecheck will parse out the special comments `# RUN` and `# CHECK`:
 
-- `# RUN` specifies an arbitary shell command. `%s` is substituted with the path to the input file. 
+- `# RUN` specifies an arbitary shell command. `%s` is substituted with the path to the input file.
 - `# CHECK` specifies an expected output line. littlecheck verifies that the output of the shell command matches the sequence of `CHECK` lines.
 
 If no `# RUN` command has been given, littlecheck will use a given shebang.
@@ -46,7 +46,7 @@ The special comments can occur at the beginning of a line, or anywhere in a line
 littlecheck supports regular expressions, using Python's re syntax. Regular expressions are embedded in CHECK lines enclosed in double curly braces.
 
 ```python
-# RUN: /usr/bin/python %s
+# RUN: /usr/bin/python3 %s
 print("A big number: ", 2**64)
 # CHECK: A big number: {{\d+L}}
 ```

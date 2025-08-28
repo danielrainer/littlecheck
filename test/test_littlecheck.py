@@ -1,23 +1,22 @@
 import unittest
 import io
 import os.path
-import tempfile
 
 import littlecheck
 
 
 class LittlecheckTest(unittest.TestCase):
     @classmethod
-    def setUpClass(self):
-        """ Switch to test/files directory. """
+    def setUpClass(cls):
+        """Switch to test/files directory."""
         test_dir = os.path.dirname(os.path.abspath(__file__))
         os.chdir(os.path.join(test_dir, "files"))
         os.environ["LANG"] = "C"
 
     def do_1_path_test(self, name, skip=False):
-        """ Run a single test. The name is the test name.
-           The input file is the name with .py extension, the expected
-           output of littlecheck is the name with .expected extension.
+        """Run a single test. The name is the test name.
+        The input file is the name with .py extension, the expected
+        output of littlecheck is the name with .expected extension.
         """
         test_path = name + ".py" if not "." in name else name
         expected_output_path = name + ".expected"
@@ -99,11 +98,13 @@ class LittlecheckTest(unittest.TestCase):
         success = littlecheck.check_path(test_path, subs, conf, failures.append)
         self.assertEqual(success, False)
         self.assertEqual(len(failures), 1)
-        self.assertEqual(isinstance(failures[0], littlecheck.littlecheck.TestFailure), True)
+        self.assertEqual(
+            isinstance(failures[0], littlecheck.littlecheck.TestFailure), True
+        )
 
     def test_exe_not_found(self):
         try:
             self.do_1_path_test("exe_not_found")
         except littlecheck.CheckerError:
-            return True
-        raise Error
+            return
+        raise Exception
