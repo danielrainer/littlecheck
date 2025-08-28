@@ -28,6 +28,7 @@ class LittlecheckTest(unittest.TestCase):
         with io.open(expected_output_path, "r", encoding="utf-8") as fd:
             expect_text = fd.read().strip()
             expect_success = not expect_text
+            print(failures_message)
             self.assertEqual(failures_message, expect_text)
             if skip:
                 self.assertEqual(success, littlecheck.SKIP)
