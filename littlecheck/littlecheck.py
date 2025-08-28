@@ -17,7 +17,7 @@ import unicodedata
 try:
     from itertools import zip_longest
 except ImportError:
-    from itertools import izip_longest as zip_longest
+    from itertools import izip_longest as zip_longest  # type: ignore
 
 
 # Directives can occur at the beginning of a line, or anywhere in a line that does not start with #.
@@ -41,7 +41,7 @@ SKIP = object()
 def find_command(program):
     import os
 
-    path, name = os.path.split(program)
+    path, _ = os.path.split(program)
     if path:
         return os.path.isfile(program) and os.access(program, os.X_OK)
     for path in os.environ["PATH"].split(os.pathsep):
@@ -302,6 +302,8 @@ class TestFailure(object):
                             if a
                             else ""
                         )
+                        # Convince type checker that bstr will in fact be a string when read.
+                        bstr = ""
                         if b:
                             bstr = (
                                 "on line "
@@ -493,11 +495,17 @@ class TestRun(object):
             print(self.subbed_command)
         proc = await runproc_async(self.subbed_command, env=self.env)
         stdout, stderr = await proc.communicate()
+
+        # Work around type system limitations / bad API design which makes the typechecker unhappy.
+        if proc.returncode is None:
+            raise RuntimeError(
+                "After `proc.communicate()` the return code must be an int."
+            )
+        status = proc.returncode
         # HACK: This is quite cheesy: POSIX specifies that sh should return 127 for a missing command.
         # It's also possible that it'll be returned in other situations,
         # most likely when the last command in a shell script doesn't exist.
         # So we check if the command *we execute* exists, and complain then.
-        status = proc.returncode
         cmd = next(
             (
                 word
@@ -589,8 +597,7 @@ class CheckCmd(object):
         raise NotImplementedError
 
     @staticmethod
-    def parse(line, checktype):
-        # type: (Line) -> CheckCmd
+    def parse(line: Line, checktype: str) -> "CheckCmd":
         # Everything inside {{}} is a regular expression.
         # Everything outside of it is a literal string.
         # Split around {{...}}. Then every odd index will be a regex, and
@@ -688,6 +695,11 @@ async def check_file_async(input_file, name, subs, config, failure_handler, env=
     for reqcmd in checker.requirecmds:
         proc = await runproc_async(perform_substitution(reqcmd.args, subs), env=env)
         await proc.communicate()
+        # Work around type system limitations / bad API design which makes the typechecker unhappy.
+        if proc.returncode is None:
+            raise RuntimeError(
+                "After `proc.communicate()` the return code must be an int."
+            )
         if proc.returncode > 0:
             return SKIP
 
